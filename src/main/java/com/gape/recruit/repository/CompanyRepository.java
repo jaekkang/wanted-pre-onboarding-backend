@@ -17,11 +17,18 @@ public class CompanyRepository {
         em.persist(company);
     }
 
+
     public Company findOne(Long companyId) {
         return em.find(Company.class, companyId);
     }
 
     public List<Company> findAll() {
         return em.createQuery("select c from Company c", Company.class).getResultList();
+    }
+
+    public List<Company> findByName(String companyName) {
+        return em.createQuery("select c from Company c where c.name = :name", Company.class)
+                .setParameter("name", companyName)
+                .getResultList();
     }
 }
