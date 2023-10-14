@@ -19,13 +19,10 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CompanyServiceTest {
     @Autowired CompanyService companyService;
 
-    @Autowired
-    CompanyRepository companyRepository;
-
     @Autowired EntityManager em;
 
     @Test
-    public void 회사조회() throws Exception {
+    public void 회사_조회() throws Exception {
         // given
         Company company = createCompany("company", "korea", "seoul");
 
@@ -37,7 +34,7 @@ public class CompanyServiceTest {
     }
 
     @Test
-    public void 회사목록조회() throws Exception {
+    public void 회사_목록_조회() throws Exception {
         // given
         Company company1 = createCompany("company1", "korea", "seoul");
         Company company2 = createCompany("company2", "korea", "busan");
@@ -51,13 +48,28 @@ public class CompanyServiceTest {
         assertEquals("korea", country, "조회된 데이터 region와 실행시 만들어지는 데이터 region이 같아야 합니다.");
 
     }
+
+    @Test
+    public void 중복_이름_회사_예외() throws Exception {
+        // given
+        Company company1 = new Company();
+        company1.setName("company");
+
+        Company company2 = new Company();
+        company2.setName("company");
+        // when
+        companyService.join(company1);
+        // then
+        assertThrows(IllegalStateException.class, ()->companyService.join(company2), "중복된 이름의 회사가 등록을 시도할 경우 오류가 발생 해야 됩니다.");
+    }
+
     public Company createCompany(String name, String country, String region) {
         Company company = new Company();
         company.setName(name);
         company.setCountry(country);
         company.setRegion(region);
 
-        em.persist(company);
+        companyService.join(company);
         return company;
     }
 }
