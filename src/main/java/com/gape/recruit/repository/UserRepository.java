@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class UsersRepository {
+public class UserRepository {
     private final EntityManager em;
 
     public void save(Users user) {
