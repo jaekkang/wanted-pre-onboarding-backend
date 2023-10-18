@@ -15,6 +15,9 @@ import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -28,6 +31,25 @@ public class RecruitServiceTest {
 
     @Autowired
     EntityManager em;
+
+    @Test
+    public void 채용공고_조회() throws Exception {
+        // given
+        List<Recruit> recruits = recruitService.findAll();
+
+        // when & then
+        assertEquals(5, recruits.size());
+    }
+
+    @Test
+    public void 채용공고_검색() throws Exception {
+        // given
+        Optional<List<Recruit>> recruits = recruitService.findByKeyword("backend");
+        // when // then
+
+        assertTrue(recruits.isPresent());
+        assertEquals(3, recruits.get().size());
+    }
 
     @Test
     public void 채용공고_추가() throws Exception {
