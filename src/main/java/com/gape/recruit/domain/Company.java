@@ -20,8 +20,6 @@ public class Company {
 
     private String region;
 
-    @OneToMany(mappedBy = "company")
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
     private List<Recruit> recruits = new ArrayList<>();
-
-
 }
