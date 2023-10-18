@@ -36,15 +36,15 @@ public class CompanyServiceTest {
     @Test
     public void 회사_목록_조회() throws Exception {
         // given
-        Company company1 = createCompany("company1", "korea", "seoul");
-        Company company2 = createCompany("company2", "korea", "busan");
+        Company company1 = createCompany("company3", "korea", "seoul");
+        Company company2 = createCompany("company4", "korea", "busan");
         // when
         int size = companyService.findAll().size();
         String name = companyService.findOne(company1.getId()).getName();
         String country = companyService.findOne(company1.getId()).getCountry();
         // then
-        assertEquals(2, size, "조회된 데이터 개수와 실행시 만들어지는 데이터의 숫자가 같아야합니다.");
-        assertEquals("company1", name, "조회된 데이터의 name과 실행시 만들어지는 데이터의 name이 같아야 합니다.");
+        assertEquals(4, size, "조회된 데이터 개수와 실행시 만들어지는 데이터의 숫자가 같아야합니다.");
+        assertEquals("company3", name, "조회된 데이터의 name과 실행시 만들어지는 데이터의 name이 같아야 합니다.");
         assertEquals("korea", country, "조회된 데이터 region와 실행시 만들어지는 데이터 region이 같아야 합니다.");
 
     }
