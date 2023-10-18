@@ -1,8 +1,8 @@
 package com.gape.recruit.service;
 
-import com.gape.recruit.domain.Company;
 import com.gape.recruit.domain.Recruit;
 import com.gape.recruit.domain.Users;
+import com.gape.recruit.dto.recruit.RecruitDto;
 import com.gape.recruit.repository.CompanyRepository;
 import com.gape.recruit.repository.RecruitRepository;
 import com.gape.recruit.repository.UserRepository;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -33,22 +34,33 @@ public class RecruitService {
     }
 
     @Transactional
-    public void delete(Long recruitId) {
+    public Long delete(Long recruitId) {
         Recruit recruit = recruitRepository.findOne(recruitId);
-        recruit.delete();
+        recruitRepository.delete(recruit);
+        return recruitId;
     }
 
     @Transactional
-    public void apply(Long recruitId, Long userId) throws IllegalStateException {
-        Users user = userRepository.findOne(userId);
+    public Long apply(Long recruitId, Users user) throws IllegalStateException {
         Recruit recruit = recruitRepository.findOne(recruitId);
         if (user.getRecruit() != null)
             throw new IllegalStateException("이미 지원한 공고가 있습니다.");
         recruit.setUser(user);
+        return recruitId;
+    }
+
+    public Optional<List<Recruit>> findByKeyword(String keyword) {
+        return recruitRepository.searchRecruit(keyword);
     }
 
     public Recruit findOne(Long recruitId) {
         return recruitRepository.findOne(recruitId);
+    }
+
+    @Transactional
+    public void update(Long recruitId, RecruitDto.UpdateRecruitRequest request) {
+        Recruit recruit = recruitRepository.findOne(recruitId);
+        recruit.update(request);
     }
 
     public List<Recruit> findAll() {
