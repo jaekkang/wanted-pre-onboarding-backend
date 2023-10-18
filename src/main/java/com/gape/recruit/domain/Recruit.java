@@ -1,5 +1,6 @@
 package com.gape.recruit.domain;
 
+import com.gape.recruit.dto.recruit.RecruitDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +22,7 @@ public class Recruit {
     @JoinColumn(name = "company_id")
     private Company company;
 
-    @OneToMany(mappedBy = "recruit")
+    @OneToMany(mappedBy = "recruit", cascade = CascadeType.ALL)
     private List<Users> users = new ArrayList<>();
 
     private String position;
@@ -31,9 +32,6 @@ public class Recruit {
     private String techStack;
 
     private String content;
-
-    @Enumerated(EnumType.STRING)
-    private RecruitStatus status;
 
     //== 연관관계 메서드 ==//
 
@@ -56,11 +54,13 @@ public class Recruit {
         recruit.setReward(reward);
         recruit.setTechStack(techStack);
         recruit.setContent(content);
-        recruit.setStatus(RecruitStatus.VALID);
         return recruit;
     }
 
-    public void delete() {
-        setStatus(RecruitStatus.INVALID);
+    public void update(RecruitDto.UpdateRecruitRequest request) {
+        if(request.getPosition() != null) this.position = request.getPosition();
+        if(request.getContent() != null) this.content = request.getContent();
+        if(request.getReward() != null) this.reward = request.getReward();
+        if(request.getTechStack() != null) this.techStack = request.getTechStack();
     }
 }
