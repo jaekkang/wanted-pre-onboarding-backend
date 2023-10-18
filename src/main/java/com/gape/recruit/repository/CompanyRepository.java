@@ -19,7 +19,11 @@ public class CompanyRepository {
 
 
     public Company findOne(Long companyId) {
-        return em.find(Company.class, companyId);
+        Company company = em.find(Company.class, companyId);
+        if (company == null) {
+            throw new IllegalArgumentException("해당 ID의 회사는 존재하지 않습니다.");
+        }
+        return company;
     }
 
     public List<Company> findAll() {
