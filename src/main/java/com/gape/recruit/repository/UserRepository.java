@@ -17,7 +17,11 @@ public class UserRepository {
     }
 
     public Users findOne(Long userId) {
-        return em.find(Users.class, userId);
+        Users user = em.find(Users.class, userId);
+        if (user == null) {
+            throw new IllegalArgumentException("해당 ID의 사용자는 존재하지 않습니다.");
+        }
+        return user;
     }
 
     public List<Users> findAll() {
