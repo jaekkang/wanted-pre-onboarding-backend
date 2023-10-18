@@ -2,31 +2,43 @@ package com.gape.recruit.controller;
 
 import com.gape.recruit.domain.Users;
 import com.gape.recruit.service.UserService;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
 
-    @GetMapping("/users")
-    @ResponseBody
-    public List<Users> findUsers() {
-        Users user1 = new Users();
-        user1.setName("test1");
-        userService.join(user1);
-        Users user2 = new Users();
-        user2.setName("test2");
-        userService.join(user2);
-        Users user3 = new Users();
-        user3.setName("test3");
-        userService.join(user3);
+    @GetMapping("/api/users")
+    public Result findAllUsers() {
+        List<Users> findUsers = userService.findAll();
 
-        return userService.findAll();
+        List<UserDto> collect = findUsers.stream()
+                .map(m -> new UserDto(m.getId(), m.getName()))
+                .collect(Collectors.toList());
+        return new Result(collect);
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class Result<T> {
+        private T data;
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class UserDto {
+        private Long id;
+        private String name;
     }
 }
